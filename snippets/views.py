@@ -6,7 +6,7 @@ from rest_framework.reverse import reverse
 
 from .models import Snippet
 from .serializers import SnippetSerializer, UserSerializer
-from .permissions import IsOwnerOrReadOnly
+from .permissions import IsOwner
 
 
 @api_view(['GET'])
@@ -40,7 +40,7 @@ class SnippetDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Snippet.objects.all()
     serializer_class = SnippetSerializer
 
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwner]
 
 
 class UserList(generics.ListAPIView):
@@ -51,3 +51,5 @@ class UserList(generics.ListAPIView):
 class UserDetail(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+    permission_classes = [permissions.IsAuthenticated]
