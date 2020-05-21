@@ -39,7 +39,10 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'snippets.apps.SnippetsConfig',
+    'account.apps.AccountConfig'
 ]
+
+AUTH_USER_MODEL = 'account.User'
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
