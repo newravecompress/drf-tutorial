@@ -1,29 +1,39 @@
 from django import forms
 from django.contrib import admin
+from django.contrib.auth import password_validation, get_user_model
 from django.contrib.auth.models import Group
-from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.utils.translation import gettext_lazy as _
 
-from .models import User
+from .forms import CustomUserCreationForm, CustomUserChangeForm
+
+User = get_user_model()
 
 
-class CustomUserCreationForm(UserCreationForm):
-    class Meta:
-        model = User
-        fields = ('email',)
+class CustomUserAdmin(UserAdmin):
+    add_form = CustomUserCreationForm
+    form = CustomUserChangeForm
+    model = User
+    fieldsets = (
+        (_('Personal info'), {'fields': ('first_name', 'last_name', 'email', 'password')}),
+        (_('Permissions'), {
+            'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions'),
+        }),
+        (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
+    )
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('email', 'password1', 'password2', 'is_staff', 'is_active'),
+        }),
+    )
 
+    search_fields = ('first_name', 'last_name', 'email')
+    ordering = ('email',)
 
-class CustomUserChangeForm(UserChangeForm):
-    class Meta:
-        model = User
-        fields = '__all__'
-
-
-@admin.register(User)
-class UserAdmin(BaseUserAdmin):
-    list_display = ('username', 'email', 'first_name', 'last_name', 'is_staff', 'last_login', 'date_joined')
+    list_display = ('email', 'first_name', 'last_name', 'is_staff', 'last_login', 'date_joined')
     readonly_fields = ('last_login', 'date_joined')
 
-    form = CustomUserChangeForm
-    add_form = CustomUserCreationForm
+
+admin.site.register(User, CustomUserAdmin)

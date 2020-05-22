@@ -4,8 +4,10 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
+from account.serializers import UserSerializer
+
 from .models import Snippet
-from .serializers import SnippetSerializer, UserSerializer
+from .serializers import SnippetSerializer
 from .permissions import IsOwnerOrReadOnly
 
 
