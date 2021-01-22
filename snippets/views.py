@@ -17,7 +17,7 @@ User = get_user_model()
 @api_view(['GET'])
 def api_root(request, format=None):
     return Response({
-        'users': reverse('user-list', request=request, format=format),
+        'accounts': reverse('account-list', request=request, format=format),
         'snippets': reverse('snippet-list', request=request, format=format)
     })
 
@@ -45,7 +45,7 @@ class SnippetDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Snippet.objects.all()
     serializer_class = SnippetSerializer
 
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated]
 
 
 class UserList(generics.ListAPIView):
